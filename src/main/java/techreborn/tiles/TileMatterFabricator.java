@@ -54,13 +54,19 @@ public class TileMatterFabricator extends TilePowerAcceptor
     public static int fabricationRate = 6_000;
     @ConfigRegistry(config = "machines", category = "matter_fabricator", key = "MatterFabricatorEnergyPerAmp", comment = "Matter Fabricator EU per amplifier unit, multiply this with the rate for total EU")
     public static int energyPerAmp = 5;
-
+    private static ItemStack UU_MATTER;
     public Inventory inventory = new Inventory(12, "TileMatterFabricator", 64, this);
-    private static final ItemStack UU_MATTER = new ItemStack(ModItems.UU_MATTER);
     private int amplifier = 0;
 
     public TileMatterFabricator() {
         super();
+    }
+
+    private static ItemStack getUuMatterInstance() {
+        if (UU_MATTER == null) {
+            UU_MATTER = new ItemStack(ModItems.UU_MATTER);
+        }
+        return UU_MATTER;
     }
 
     private boolean spaceForOutput() {
@@ -74,7 +80,7 @@ public class TileMatterFabricator extends TilePowerAcceptor
 
     private boolean spaceForOutput(int slot) {
         return inventory.getStackInSlot(slot).isEmpty()
-                || ItemUtils.isItemEqual(inventory.getStackInSlot(slot), new ItemStack(ModItems.UU_MATTER), true, true)
+                || ItemUtils.isItemEqual(inventory.getStackInSlot(slot), getUuMatterInstance(), true, false)
                 && inventory.getStackInSlot(slot).getCount() < 64;
     }
 
@@ -91,7 +97,7 @@ public class TileMatterFabricator extends TilePowerAcceptor
         ItemStack stack = getStackInSlot(slot);
         if (stack.isEmpty()) {
             inventory.setInventorySlotContents(slot, new ItemStack(ModItems.UU_MATTER));
-        } else if (ItemUtils.isItemEqual(stack, UU_MATTER, true, false) && stack.getCount() < stack.getMaxStackSize()) {
+        } else if (ItemUtils.isItemEqual(stack, getUuMatterInstance(), true, false) && stack.getCount() < stack.getMaxStackSize()) {
             inventory.getStackInSlot(slot).grow(1);
         }
     }
@@ -219,8 +225,8 @@ public class TileMatterFabricator extends TilePowerAcceptor
                 .syncIntegerValue(this::getProgress, this::setProgress).addInventory().create(this);
     }
 
-	@Override
-	public void markDirty() {
-		this.world.markChunkDirty(this.pos, this);
-	}
+    @Override
+    public void markDirty() {
+        this.world.markChunkDirty(this.pos, this);
+    }
 }
