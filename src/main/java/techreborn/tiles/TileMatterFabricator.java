@@ -56,6 +56,7 @@ public class TileMatterFabricator extends TilePowerAcceptor
     public static int energyPerAmp = 5;
 
     public Inventory inventory = new Inventory(12, "TileMatterFabricator", 64, this);
+    private static final ItemStack UU_MATTER = new ItemStack(ModItems.UU_MATTER);
     private int amplifier = 0;
 
     public TileMatterFabricator() {
@@ -90,7 +91,7 @@ public class TileMatterFabricator extends TilePowerAcceptor
         ItemStack stack = getStackInSlot(slot);
         if (stack.isEmpty()) {
             inventory.setInventorySlotContents(slot, new ItemStack(ModItems.UU_MATTER));
-        } else if (ItemUtils.isItemEqual(stack, new ItemStack(ModItems.UU_MATTER), true, true) && stack.getCount() < stack.getMaxStackSize()) {
+        } else if (ItemUtils.isItemEqual(stack, UU_MATTER, true, false) && stack.getCount() < stack.getMaxStackSize()) {
             inventory.getStackInSlot(slot).grow(1);
         }
     }
