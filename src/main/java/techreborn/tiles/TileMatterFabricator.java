@@ -57,6 +57,8 @@ public class TileMatterFabricator extends TilePowerAcceptor
     private static ItemStack UU_MATTER;
     public Inventory inventory = new Inventory(12, "TileMatterFabricator", 64, this);
     private int amplifier = 0;
+    private ItemStack lastStack = ItemStack.EMPTY;
+    private int lastValue;
 
     public TileMatterFabricator() {
         super();
@@ -117,11 +119,20 @@ public class TileMatterFabricator extends TilePowerAcceptor
     }
 
     public int getValue(ItemStack itemStack) {
-        if (OreDictUtils.isOre(itemStack, "itemScrap") ||
-                OreDictUtils.isOre(itemStack, "materialScrap")) return 200;
+        if (ItemUtils.isItemEqual(itemStack, lastStack, true, false)) {
+            return lastValue;
+        }
+        if (OreDictUtils.isOre(itemStack, "itemScrap") || OreDictUtils.isOre(itemStack, "materialScrap")) {
+            lastValue = 200;
+            lastStack = itemStack;
+            return lastValue;
+        }
 
-        if (OreDictUtils.isOre(itemStack, "itemScrapBox") ||
-                OreDictUtils.isOre(itemStack, "materialScrapBox")) return 2000;
+        if (OreDictUtils.isOre(itemStack, "itemScrapBox") || OreDictUtils.isOre(itemStack, "materialScrapBox")) {
+            lastValue = 2000;
+            lastStack = itemStack;
+            return lastValue;
+        }
 
         return 0;
     }
