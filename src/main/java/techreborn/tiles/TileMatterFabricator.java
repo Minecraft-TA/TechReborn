@@ -170,7 +170,7 @@ public class TileMatterFabricator extends TilePowerAcceptor
                 if (amp != 0 && this.canUseEnergy(euNeeded)) {
                     useEnergy(euNeeded);
                     amplifier += amp;
-                    inventory.decrStackSize(i, 1);
+                    this.decreaseStackSize(i);
                 }
             }
         }
@@ -180,6 +180,19 @@ public class TileMatterFabricator extends TilePowerAcceptor
                 addOutputProducts();
                 amplifier -= fabricationRate;
             }
+        }
+    }
+
+    private void decreaseStackSize(int slotId) {
+        Inventory inventory = this.inventory;
+        if (slotId < inventory.contents.length && !inventory.contents[slotId].isEmpty()) {
+            if (inventory.contents[slotId].getCount() > 1) {
+                inventory.contents[slotId].shrink(1);
+                this.markDirty();
+            } else {
+                this.setInventorySlotContents(slotId, ItemStack.EMPTY);
+            }
+            inventory.hasChanged = true;
         }
     }
 
