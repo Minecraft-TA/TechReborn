@@ -251,6 +251,8 @@ public class TileMatterFabricator extends TilePowerAcceptor
 
     @Override
     public void markDirty() {
-        this.world.markChunkDirty(this.pos, this);
+        if (this.world != null) {
+            this.world.markChunkDirty(this.pos, this);
+        }
     }
 }
